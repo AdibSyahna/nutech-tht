@@ -233,9 +233,7 @@ export class TransactionRouter extends BaseRouterHandler {
         const SQLSelect = /*sql*/`
             SELECT COUNT(*)
             FROM "transactions"
-            WHERE "user_id" = ?
-            AND "created_at" >= ?
-            AND "deleted_at" IS NULL
+            WHERE "created_at" >= ?
             `;
         const Midnight = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
         const Counter = <{ 'COUNT(*)': number }>this.db!.prepare(SQLSelect).get(uid, Midnight);
