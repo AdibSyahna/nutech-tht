@@ -10,11 +10,12 @@ interface TransactionHistory {
 export class TransactionRouter extends BaseRouterHandler {
     public constructor() {
         super();
-        this.router.use(this.authenticationHandler.bind(this));
-        this.router.get("/balance", this.balance.bind(this));
-        this.router.post("/topup", this.topup.bind(this));
-        this.router.post("/transaction", this.transaction.bind(this));
-        this.router.get("/transaction/history", this.transactionHistory.bind(this));
+
+        const Auth = this.authenticationHandler.bind(this);
+        this.router.get("/balance", Auth, this.balance.bind(this));
+        this.router.post("/topup", Auth, this.topup.bind(this));
+        this.router.post("/transaction", Auth, this.transaction.bind(this));
+        this.router.get("/transaction/history", Auth, this.transactionHistory.bind(this));
     }
 
     private transactionHistory(request: Request, response: Response): void {
