@@ -25,6 +25,9 @@ export class Config {
 
         /** Static path */
         this.app.use(this.STATIC_PATH, express.static(this.UPLOAD_PATH));
+
+        /** Trust proxy for cloud deployment */
+        if (process.env.EXPRESS_TRUST_PROXY === "true") this.app.set("trust proxy", 1);
     }
 
     private handleAuthorization: express.Handler = (request, response, next) => {
