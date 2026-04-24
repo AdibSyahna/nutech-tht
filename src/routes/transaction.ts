@@ -101,7 +101,7 @@ export class TransactionRouter extends BaseRouterHandler {
             return Fail(`Saldo tidak mencukupi.`, 103, 409);
         }
 
-        const Invoice = this.generateInvoice(UID);
+        const Invoice = this.generateInvoice();
         const Type: TransactionType = "PAYMENT";
         const SQLInsert = /*sql*/`
             INSERT INTO "transactions" ("user_id", "invoice_number", "service_code", "transaction_type", "amount", "created_at")
@@ -160,7 +160,7 @@ export class TransactionRouter extends BaseRouterHandler {
             return Fail("Parameter amount hanya boleh angka dan tidak boleh lebih kecil dari 0.", 102, 411);
         }
 
-        const Invoice = this.generateInvoice(UID);
+        const Invoice = this.generateInvoice();
         const Type: TransactionType = "TOPUP";
         const SQLInsert = /*sql*/`
             INSERT INTO "transactions" ("user_id", "invoice_number", "transaction_type", "amount", "created_at")
@@ -227,7 +227,7 @@ export class TransactionRouter extends BaseRouterHandler {
         return balance;
     }
 
-    private generateInvoice(uid: number): string {
+    private generateInvoice(): string {
         if (!this.ensureDeps()) throw new Error(`Tried to generate invoice, but dependencies are not injected.`);
 
         const SQLSelect = /*sql*/`
@@ -236,7 +236,7 @@ export class TransactionRouter extends BaseRouterHandler {
             WHERE "created_at" >= ?
             `;
         const Midnight = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
-        const Counter = <{ 'COUNT(*)': number }>this.db!.prepare(SQLSelect).get(uid, Midnight);
+        const Counter = <{ 'COUNT(*)': number }>this.db!.prepare(SQLSelect).get(Midnight);
         const DayTransactionCounter = Counter['COUNT(*)'] + 1;
 
         const Today = new Date();
